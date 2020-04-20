@@ -1,9 +1,12 @@
 <?php
 
+use App\Laravue\Models\Role;
 use App\User;
 use Illuminate\Http\Request;
 use \App\Laravue\Faker;
 use \App\Laravue\JsonResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,15 +47,59 @@ Route::post('/login', function (Request $request) {
     return response($response, 201);
 });
 
+//Mobile App Registration Endpoint
+Route::post('/registration', function (Request $request) {
+
+    $validator = Validator::make($request->input(), array(
+        'password' => ['required', 'min:6'],
+        'confirmPassword' => 'same:password',
+    ));
+
+    if ($validator->fails()) {
+        return response()->json(['error' => true, 'messages' => $validator->errors(),], 422);
+    } else {
+
+        $params = $request->all();
+        $user = \App\Laravue\Models\User::create([
+            'name' => $params['name'],
+            'email' => $params['email'],
+            'password' => Hash::make($params['password']),
+            'year' => $params['year'],
+            'reg_num' => $params['reg_num'],
+            'semester' => $params['semester'],
+            'program' => $params['program'],
+        ]);
+
+        $role = Role::findByName($params['role']);
+        $user->syncRoles($role);
+
+
+
+        $token = $user->createToken('my-app-token')->plainTextToken;
+
+        return response()->json([
+            'error'=>false,
+            'message'=>"Registration Successful",
+            'user' => $user,
+            'token' => $token
+        ], 200);
+    }
+
+});
+
 //Collection of Mobile App Endpoint With Authentication
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => 'API\v1'], function(){
 
     // Users
-    Route::get('user', 'UserController@fetchUserProfile');
     Route::post('user', 'UserController@studentRegistration');
+    Route::get('user', 'UserController@fetchUserProfile');
 
     // Programs
     Route::get('program', 'ProgramController@index');
+
+    //courses
+    Route::get('courses', 'CourseController@index');
+    Route::get('current-courses', 'CourseController@myCurrentCourses');
 
 
 });

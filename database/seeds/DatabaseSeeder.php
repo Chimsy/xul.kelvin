@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProgramSeeder::class,
             UsersTableSeeder::class,
+            CourseSeeder::class,
         ]);
 
         $admin = User::create([

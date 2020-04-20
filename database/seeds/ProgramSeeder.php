@@ -113,6 +113,7 @@ class ProgramSeeder extends Seeder
                 'created_at' => '2020-01-04 03:45:16',
                 'updated_at' => '2020-01-04 03:45:16'
             ],
+
             [
                 'id' => 11,
                 'program_code' => 'BCSD',
@@ -136,5 +137,6 @@ class ProgramSeeder extends Seeder
 
         ];
 
-        Program::insert($seed_programs);    }
+        Program::insert($seed_programs);
+    }
 }

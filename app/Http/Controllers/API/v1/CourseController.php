@@ -5,82 +5,54 @@ namespace App\Http\Controllers\API\v1;
 use App\Http\Controllers\Controller;
 use App\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $program = $request->input('program');
+        $results = DB::table('courses')
+            ->select('cource_id', 'course_name', 'course_description', 'program_code')
+            ->where(['status' => 1])
+            ->where(['program_code' => $program])
+            ->orderBy('program_code', 'asc')
+            ->get();
+
+        $Response = array(
+            'error' => false,
+            'message' => 'Everything is Ok',
+            'result' => $results
+        );
+
+        return $Response;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function myCurrentCourses(Request $request)
     {
-        //
+        $year = $request->input('year');
+        $semester = $request->input('semester');
+        $program = $request->input('program');
+        $level = "Level: $year.$semester";
+
+        $results = DB::table('courses')
+            ->select('cource_id', 'course_name', 'course_description', 'program_code')
+            ->where(['status' => 1])
+            ->where(['year_of_study' => $year])
+            ->where(['semester' => $semester])
+            ->where(['program_code' => $program])
+            ->orderBy('program_code', 'asc')
+            ->get();
+
+        $Response = array(
+            'error' => false,
+            'message' => 'Everything is Ok',
+            'level'=>$level,
+            'result' => $results
+        );
+
+        return $Response;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Course  $course
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Course $course)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Course  $course
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Course $course)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Course  $course
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Course $course)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Course  $course
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Course $course)
-    {
-        //
-    }
 }

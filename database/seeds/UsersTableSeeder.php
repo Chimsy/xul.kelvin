@@ -17,9 +17,14 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Golden Chimusinde',
             'email' => 'goldenchimsy@gmail.com',
-            'password' => Hash::make('#pass123')
+            'password' => Hash::make('#pass123'),
+            "reg_num"=>"R111855J",
+            'year' => '1',
+            'semester' => '1',
+            'program' => 'BMIS',
+            'created_at'=>'2020-04-20 12:36:22',
+            'updated_at'=>'2020-04-20 12:36:22',
         ]);
-
 
         $userList = [
             "Adriana C. Ocampo Uria",
