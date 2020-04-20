@@ -101,6 +101,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => '
     Route::get('courses', 'CourseController@index');
     Route::get('current-courses', 'CourseController@myCurrentCourses');
 
+    // Results
+    Route::get('results', 'ExamController@myResults');
+
 
 });
 /* Routes To Be Used For Android app End */
