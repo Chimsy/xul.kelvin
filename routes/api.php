@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Http\Request;
 use \App\Laravue\Faker;
 use \App\Laravue\JsonResponse;
@@ -15,6 +16,45 @@ use \App\Laravue\JsonResponse;
 |
 */
 
+
+/* Routes To Be Used For Android app */
+
+//Mobile App Login Endpoint
+Route::post('/login', function (Request $request) {
+    $data = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response([
+            'message' => ['These credentials do not match our records.']
+        ], 404);
+    }
+
+    $token = $user->createToken('my-app-token')->plainTextToken;
+
+    $response = [
+        'user' => $user,
+        'token' => $token
+    ];
+
+    return response($response, 201);
+});
+
+//Collection of Mobile App Endpoint With Authentication
+Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => 'API\v1'], function(){
+    Route::get('user', 'UserController@fetchUserProfile');
+    Route::post('user', 'UserController@studentRegistration');
+
+
+});
+/* Routes To Be Used For Android app End */
+
+
+/* VueJS Endpoints */
 Route::post('auth/login', 'AuthController@login');
 
 Route::group(['middleware' => 'auth:api'], function () {
@@ -30,7 +70,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('roles/{role}/permissions', 'RoleController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
 });
-
 
 // Fake APIs
 Route::get('/table/list', function () {
@@ -137,3 +176,4 @@ Route::get('articles/{id}/pageviews', function ($id) {
 
     return response()->json(new JsonResponse(['pvData' => $data]));
 });
+/* VueJS Endpoints End*/

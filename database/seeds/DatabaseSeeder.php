@@ -43,8 +43,8 @@ class DatabaseSeeder extends Seeder
         $adminRole = Role::findByName(\App\Laravue\Acl::ROLE_ADMIN);
         $managerRole = Role::findByName(\App\Laravue\Acl::ROLE_MANAGER);
         $editorRole = Role::findByName(\App\Laravue\Acl::ROLE_EDITOR);
-        $userRole = Role::findByName(\App\Laravue\Acl::ROLE_USER);
-        $visitorRole = Role::findByName(\App\Laravue\Acl::ROLE_VISITOR);
+        $userRole = Role::findByName(\App\Laravue\Acl::ROLE_STUDENT);
+        $visitorRole = Role::findByName(\App\Laravue\Acl::ROLE_GUARDIAN);
         $admin->syncRoles($adminRole);
         $manager->syncRoles($managerRole);
         $editor->syncRoles($editorRole);

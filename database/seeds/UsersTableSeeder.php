@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Laravue\Acl;
 use App\Laravue\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class UsersTableSeeder extends Seeder
 {
@@ -13,6 +14,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('users')->insert([
+            'name' => 'Golden Chimusinde',
+            'email' => 'goldenchimsy@gmail.com',
+            'password' => Hash::make('#pass123')
+        ]);
+
+
         $userList = [
             "Adriana C. Ocampo Uria",
             "Albert Einstein",
@@ -71,8 +79,8 @@ class UsersTableSeeder extends Seeder
             $roleName = \App\Laravue\Faker::randomInArray([
                 Acl::ROLE_MANAGER,
                 Acl::ROLE_EDITOR,
-                Acl::ROLE_USER,
-                Acl::ROLE_VISITOR,
+                Acl::ROLE_STUDENT,
+                Acl::ROLE_GUARDIAN,
             ]);
             $user = \App\Laravue\Models\User::create([
                 'name' => $fullName,
