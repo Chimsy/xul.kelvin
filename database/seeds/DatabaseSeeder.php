@@ -14,6 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            ProgramSeeder::class,
+            UsersTableSeeder::class,
+        ]);
+
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@laravue.dev',
@@ -50,6 +55,6 @@ class DatabaseSeeder extends Seeder
         $editor->syncRoles($editorRole);
         $user->syncRoles($userRole);
         $visitor->syncRoles($visitorRole);
-        $this->call(UsersTableSeeder::class);
+
     }
 }

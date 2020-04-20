@@ -46,8 +46,13 @@ Route::post('/login', function (Request $request) {
 
 //Collection of Mobile App Endpoint With Authentication
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => 'API\v1'], function(){
+
+    // Users
     Route::get('user', 'UserController@fetchUserProfile');
     Route::post('user', 'UserController@studentRegistration');
+
+    // Programs
+    Route::get('program', 'ProgramController@index');
 
 
 });
