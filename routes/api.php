@@ -5,6 +5,7 @@ use App\User;
 use Illuminate\Http\Request;
 use \App\Laravue\Faker;
 use \App\Laravue\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -59,7 +60,23 @@ Route::post('/login', function (Request $request) {
     return response($response, 200);
 });
 
-//Mobile App Registration Endpoint
+/* Registration */
+Route::get('program', function (){
+    $results = DB::table('programs')
+        ->select('id','program_code')
+        ->where(['status' => 1])
+        ->orderBy('program_code', 'asc')
+        ->get();
+
+    $Response = array(
+        'error' => false,
+        'message' => 'Everything is Ok',
+        'result' => $results
+    );
+
+    return $Response;
+});
+
 Route::post('/registration', function (Request $request) {
 
     $validator = Validator::make($request->input(), array(
@@ -97,6 +114,7 @@ Route::post('/registration', function (Request $request) {
     }
 
 });
+/* Registration End*/
 
 //Collection of Mobile App Endpoints With Authentication
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => 'API\v1'], function () {
@@ -105,14 +123,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => '
     Route::post('user', 'UserController@studentRegistration');
     Route::post('user', 'UserController@fetchUserProfile');
 
-    // Programs
-    Route::get('program', 'ProgramController@index');
-
     //courses
     Route::post('courses', 'CourseController@index');
     Route::post('current-courses', 'CourseController@myCurrentCourses');
 
-    // Results
     Route::post('results', 'ExamController@myResults');
 
     Route::post('timetable', 'ExamController@myTimetable');
