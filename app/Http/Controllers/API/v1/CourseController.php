@@ -13,7 +13,7 @@ class CourseController extends Controller
     {
         $program = $request->input('program');
         $results = DB::table('courses')
-            ->select('cource_id', 'course_name', 'course_description', 'program_code')
+            ->select('course_id', 'course_name', 'course_description', 'program_code')
             ->where(['status' => 1])
             ->where(['program_code' => $program])
             ->orderBy('program_code', 'asc')
@@ -36,7 +36,7 @@ class CourseController extends Controller
         $level = "Level: $year.$semester";
 
         $results = DB::table('courses')
-            ->select('cource_id', 'course_name', 'course_description', 'program_code')
+            ->select('course_id', 'course_name', 'course_description', 'program_code')
             ->where(['status' => 1])
             ->where(['year_of_study' => $year])
             ->where(['semester' => $semester])

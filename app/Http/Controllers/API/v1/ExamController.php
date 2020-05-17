@@ -9,15 +9,16 @@ use Illuminate\Support\Facades\DB;
 
 class ExamController extends Controller
 {
-    public function myResults(Request $request){
+    public function myResults(Request $request)
+    {
         $reg_num = $request->input('reg_num');
         $program = $request->input('program');
 
         $results = DB::table('exams')
-            ->select('cource_id', 'course_work_mark', 'course_exam_mark', 'course_exam_grade')
+            ->select('course_id', 'course_work_mark', 'course_exam_mark', 'course_exam_grade')
             ->where(['reg_num' => $reg_num])
             ->where(['program_code' => $program])
-            ->orderBy('cource_id', 'asc')
+            ->orderBy('course_id', 'asc')
             ->get();
 
         return array(
@@ -27,15 +28,19 @@ class ExamController extends Controller
         );
     }
 
-    public function myTimetable(Request $request){
-        $reg_num = $request->input('reg_num');
-        $program = $request->input('program');
+    public function myTimetable(Request $request)
+    {
+        $year = $request->input('year');
+        $semester = $request->input('semester');
+        $program = $request->input('program_code');
 
-        $results = DB::table('exams')
-            ->select('cource_id', 'course_work_mark', 'course_exam_mark', 'course_exam_grade')
-            ->where(['reg_num' => $reg_num])
+        $results = DB::table('timetables')
+            ->select('program_code', 'course_id', 'year', 'semester', 'exam_date', 'exam_time', 'exam_venue',
+                'exam_duration')
+            ->where(['year' => $year])
+            ->where(['semester' => $semester])
             ->where(['program_code' => $program])
-            ->orderBy('cource_id', 'asc')
+            ->orderBy('course_id', 'asc')
             ->get();
 
         return array(

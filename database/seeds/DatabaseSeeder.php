@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             CourseSeeder::class,
             ExamSeeder::class,
+            TimetableSeeder::class,
         ]);
 
         $admin = User::create([

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExamsTable extends Migration
+class CreateTimetablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateExamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('timetables', function (Blueprint $table) {
             $table->id();
-            $table->string('reg_num');
-            $table->foreign('reg_num')->references('reg_num')->on('users')->onDelete('cascade');
 
             $table->string('program_code');
             $table->foreign('program_code')->references('program_code')->on('programs')->onDelete('cascade');
@@ -24,9 +22,12 @@ class CreateExamsTable extends Migration
             $table->string('course_id');
             $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade');
 
-            $table->string('course_work_mark')->nullable();
-            $table->string('course_exam_mark')->nullable();
-            $table->string('course_exam_grade')->nullable();
+            $table->tinyInteger('year')->nullable();
+            $table->tinyInteger('semester')->nullable();
+            $table->string('exam_date')->nullable();
+            $table->string('exam_time')->nullable();
+            $table->string('exam_venue')->nullable();
+            $table->string('exam_duration')->nullable();
             $table->timestamps();
         });
     }
@@ -38,6 +39,6 @@ class CreateExamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('timetables');
     }
 }
