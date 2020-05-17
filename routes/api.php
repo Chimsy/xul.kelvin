@@ -33,18 +33,30 @@ Route::post('/login', function (Request $request) {
 
     if (!$user || !Hash::check($request->password, $user->password)) {
         return response([
-            'message' => ['These credentials do not match our records.']
+            "data" => [
+                'message' => [
+                    'error' => true,
+                    'error_msg' => 'These credentials do not match our records.'
+                ],
+            ]
         ], 404);
     }
 
     $token = $user->createToken('my-app-token')->plainTextToken;
 
     $response = [
-        'user' => $user,
-        'token' => $token
+        "data" => [
+            'message' => [
+                'error' => false,
+            ],
+            'user' => $user,
+            'user_token' => [
+                'actual_token' => $token
+            ]
+        ]
     ];
 
-    return response($response, 201);
+    return response($response, 200);
 });
 
 //Mobile App Registration Endpoint
@@ -74,12 +86,11 @@ Route::post('/registration', function (Request $request) {
         $user->syncRoles($role);
 
 
-
         $token = $user->createToken('my-app-token')->plainTextToken;
 
         return response()->json([
-            'error'=>false,
-            'message'=>"Registration Successful",
+            'error' => false,
+            'message' => "Registration Successful",
             'user' => $user,
             'token' => $token
         ], 200);
@@ -87,22 +98,24 @@ Route::post('/registration', function (Request $request) {
 
 });
 
-//Collection of Mobile App Endpoint With Authentication
-Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => 'API\v1'], function(){
+//Collection of Mobile App Endpoints With Authentication
+Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => 'API\v1'], function () {
 
     // Users
     Route::post('user', 'UserController@studentRegistration');
-    Route::get('user', 'UserController@fetchUserProfile');
+    Route::post('user', 'UserController@fetchUserProfile');
 
     // Programs
     Route::get('program', 'ProgramController@index');
 
     //courses
-    Route::get('courses', 'CourseController@index');
-    Route::get('current-courses', 'CourseController@myCurrentCourses');
+    Route::post('courses', 'CourseController@index');
+    Route::post('current-courses', 'CourseController@myCurrentCourses');
 
     // Results
-    Route::get('results', 'ExamController@myResults');
+    Route::post('results', 'ExamController@myResults');
+
+    Route::post('timetable', 'ExamController@myTimetable');
 
 
 });

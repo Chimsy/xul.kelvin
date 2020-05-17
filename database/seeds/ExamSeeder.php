@@ -46,8 +46,8 @@ class ExamSeeder extends Seeder
                 'reg_num' => $reg_num,
                 'program_code' => $program_code,
                 'cource_id' => 'BMIS 113',
-                'course_work_mark' => '15',
-                'course_exam_mark' => '86',
+                'course_work_mark' => '14',
+                'course_exam_mark' => '76',
                 'course_exam_grade' => '1',
                 'created_at' => '2020-01-04 03:45:16',
                 'updated_at' => '2020-01-04 03:45:16'

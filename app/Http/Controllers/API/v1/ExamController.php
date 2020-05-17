@@ -20,12 +20,28 @@ class ExamController extends Controller
             ->orderBy('cource_id', 'asc')
             ->get();
 
-        $Response = array(
+        return array(
             'error' => false,
             'message' => 'Everything is Ok',
             'result' => $results
         );
+    }
 
-        return $Response;
+    public function myTimetable(Request $request){
+        $reg_num = $request->input('reg_num');
+        $program = $request->input('program');
+
+        $results = DB::table('exams')
+            ->select('cource_id', 'course_work_mark', 'course_exam_mark', 'course_exam_grade')
+            ->where(['reg_num' => $reg_num])
+            ->where(['program_code' => $program])
+            ->orderBy('cource_id', 'asc')
+            ->get();
+
+        return array(
+            'error' => false,
+            'message' => 'Everything is Ok',
+            'result' => $results
+        );
     }
 }
