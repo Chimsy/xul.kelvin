@@ -63,7 +63,7 @@ Route::post('/login', function (Request $request) {
 /* Registration */
 Route::get('program', function (){
     $results = DB::table('programs')
-        ->select('id','program_code')
+        ->select('id','program_code','program_price')
         ->where(['status' => 1])
         ->orderBy('program_code', 'asc')
         ->get();
