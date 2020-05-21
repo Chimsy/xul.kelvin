@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             ExamSeeder::class,
             TimetableSeeder::class,
+            MessageSeeder::class,
         ]);
 
         $admin = User::create([

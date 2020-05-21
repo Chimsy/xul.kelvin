@@ -35,8 +35,7 @@ class ExamController extends Controller
         $program = $request->input('program_code');
 
         $results = DB::table('timetables')
-            ->select('program_code', 'course_id', 'year', 'semester', 'exam_date', 'exam_time', 'exam_venue',
-                'exam_duration')
+            ->select('program_code', 'course_id', 'year', 'semester', 'exam_date', 'exam_time', 'exam_venue', 'exam_duration')
             ->where(['year' => $year])
             ->where(['semester' => $semester])
             ->where(['program_code' => $program])

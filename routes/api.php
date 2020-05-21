@@ -9,18 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-
 /* Routes To Be Used For Android app */
 
 //Mobile App Login Endpoint
@@ -61,20 +49,73 @@ Route::post('/login', function (Request $request) {
 });
 
 /* Registration */
-Route::get('program', function (){
+Route::get('program', function () {
     $results = DB::table('programs')
-        ->select('id','program_code','program_price')
+        ->select('id', 'program_code', 'program_price')
         ->where(['status' => 1])
         ->orderBy('program_code', 'asc')
         ->get();
 
-    $Response = array(
+    return array(
         'error' => false,
         'message' => 'Everything is Ok',
         'result' => $results
     );
+});
 
-    return $Response;
+Route::post('semester-reg', function (Request $request) {
+    $reg_num = $request->input('reg_num');
+
+    $validator = Validator::make($request->input(), array(
+        'reg_num' => 'required',
+    ));
+
+    if ($validator->fails()) {
+        return response()->json([
+            'error' => true,
+            'messages' => $validator->errors(),],
+            422);
+    } else {
+        $results = DB::table('users')
+            ->select('id', 'name', 'email', 'reg_num', 'year', 'semester', 'program')
+            ->where(['reg_num' => $reg_num])
+            ->get();
+
+        $name = $results[0]->name;
+        $email = $results[0]->email;
+        $reg_num = $results[0]->reg_num;
+        $year = $results[0]->year;
+        $semester = $results[0]->semester;
+        $program_code = $results[0]->program;
+        $program_name = null;
+        $program_price = null;
+
+        if ($program_code != null) {
+            $resultsProgram = DB::table('programs')
+                ->select('id', 'program_code', 'program_name', 'program_price')
+                ->where(['program_code' => $program_code])
+                ->get();
+
+            $program_name = $resultsProgram[0]->program_name;
+            $program_price = $resultsProgram[0]->program_price;
+        }
+    }
+
+    return array(
+        'error' => false,
+        'message' => 'Everything is Ok',
+        'result' => [
+            [
+                'name' => $name,
+                'email' => $email,
+                'reg_num' => $reg_num,
+                'year' => $year,
+                'semester' => $semester,
+                'program_name' => $program_name,
+                'program_price' => $program_price
+            ]
+        ]
+    );
 });
 
 Route::post('/registration', function (Request $request) {
@@ -102,7 +143,6 @@ Route::post('/registration', function (Request $request) {
         $role = Role::findByName($params['role']);
         $user->syncRoles($role);
 
-
         $token = $user->createToken('my-app-token')->plainTextToken;
 
         return response()->json([
@@ -127,9 +167,20 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => '
     Route::post('courses', 'CourseController@index');
     Route::post('current-courses', 'CourseController@myCurrentCourses');
 
+    //Results
     Route::post('results', 'ExamController@myResults');
 
+    //Timetable
     Route::post('timetable', 'ExamController@myTimetable');
+
+    //Messages
+    Route::post('send-msg-help-desk', 'MessageController@sendMsgToHelpDesk');
+    Route::post('receive-msg-help-desk', 'MessageController@receiveMsgs');
+
+    //Payments
+    Route::post('process-payment', 'PaymentController@processPayment');
+
+
 
 
 });
