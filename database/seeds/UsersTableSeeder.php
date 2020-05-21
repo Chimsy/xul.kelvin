@@ -22,6 +22,8 @@ class UsersTableSeeder extends Seeder
             'year' => '4',
             'semester' => '2',
             'program' => 'BMIS',
+            'ecocash' => 35000,
+            'zipit' => 50000,
             'created_at'=>'2020-04-20 12:36:22',
             'updated_at'=>'2020-04-20 12:36:22',
         ]);
