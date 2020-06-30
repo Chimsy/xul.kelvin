@@ -8,7 +8,7 @@ const adminRoutes = {
   name: 'Administrator',
   alwaysShow: true,
   meta: {
-    title: 'administrator',
+    title: 'User Management',
     icon: 'admin',
     permissions: ['view menu administrator'],
   },
@@ -32,6 +32,7 @@ const adminRoutes = {
       path: 'roles',
       component: () => import('@/views/role-permission/List'),
       name: 'RoleList',
+      hidden: true,
       meta: { title: 'rolePermission', icon: 'role', permissions: ['manage permission'] },
     },
     {
@@ -52,6 +53,7 @@ const adminRoutes = {
       path: 'articles',
       component: () => import('@/views/articles/List'),
       name: 'ArticleList',
+      hidden: true,
       meta: { title: 'articleList', icon: 'list', permissions: ['manage article'] },
     },
   ],

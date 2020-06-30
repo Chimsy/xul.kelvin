@@ -6,6 +6,7 @@ const excelRoutes = {
   component: Layout,
   redirect: '/excel/export-excel',
   name: 'Excel',
+  hidden: true,
   meta: {
     title: 'excel',
     icon: 'excel',

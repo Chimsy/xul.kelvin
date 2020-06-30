@@ -48,6 +48,19 @@ import permissionRoutes from './modules/permission';
 
 export const constantRoutes = [
   {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', noCache: false },
+      },
+    ],
+  },
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,
@@ -80,22 +93,10 @@ export const constantRoutes = [
     hidden: true,
   },
   {
-    path: '',
-    component: Layout,
-    redirect: 'dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', noCache: false },
-      },
-    ],
-  },
-  {
     path: '/documentation',
     component: Layout,
     redirect: '/documentation/index',
+    hidden: true,
     children: [
       {
         path: 'index',
@@ -109,6 +110,7 @@ export const constantRoutes = [
     path: '/profile',
     component: Layout,
     redirect: '/profile/edit',
+    hidden: true,
     children: [
       {
         path: 'edit',
@@ -135,16 +137,17 @@ export const constantRoutes = [
 ];
 
 export const asyncRoutes = [
+  tableRoutes,
+  adminRoutes,
   permissionRoutes,
   componentRoutes,
   chartsRoutes,
   nestedRoutes,
-  tableRoutes,
-  adminRoutes,
   {
     path: '/theme',
     component: Layout,
     redirect: 'noredirect',
+    hidden: true,
     children: [
       {
         path: 'index',
@@ -158,6 +161,7 @@ export const asyncRoutes = [
     path: '/clipboard',
     component: Layout,
     redirect: 'noredirect',
+    hidden: true,
     meta: { permissions: ['view menu clipboard'] },
     children: [
       {
@@ -175,6 +179,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/zip/download',
     alwaysShow: true,
+    hidden: true,
     meta: { title: 'zip', icon: 'zip', permissions: ['view menu zip'] },
     children: [
       {
@@ -189,6 +194,7 @@ export const asyncRoutes = [
     path: '/pdf',
     component: Layout,
     redirect: '/pdf/index',
+    hidden: true,
     meta: { title: 'pdf', icon: 'pdf', permissions: ['view menu pdf'] },
     children: [
       {
@@ -207,6 +213,7 @@ export const asyncRoutes = [
   {
     path: '/i18n',
     component: Layout,
+    hidden: true,
     meta: { permissions: ['view menu i18n'] },
     children: [
       {
@@ -220,6 +227,7 @@ export const asyncRoutes = [
   {
     path: '/external-link',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'https://github.com/tuandm/laravue',

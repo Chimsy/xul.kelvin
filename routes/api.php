@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-/* Routes To Be Used For Android app */
+/* Android app */
 
 //Mobile App Login Endpoint
 Route::post('/login', function (Request $request) {
@@ -188,7 +188,7 @@ Route::group([
 
 
 });
-/* Routes To Be Used For Android app End */
+/* Android app End */
 
 
 /* VueJS Endpoints */
