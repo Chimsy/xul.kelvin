@@ -184,7 +184,7 @@ Route::group([
 
     //Payments
     Route::post('customer-details', 'PaymentController@processingCustomerDetail');
-//    Route::post('process-payment', 'PaymentController@processPayment');
+    Route::post('process-payment', 'PaymentController@processPayment');
 
 
 });

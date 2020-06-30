@@ -15,9 +15,6 @@ class PaymentController extends Controller
     public function processingCustomerDetail(Request $request)
     {
         $validator = Validator::make($request->input(), array(
-            'source_ref' => 'required',
-            'payment_method' => 'required',
-            'amount' => 'required',
             'reg_num' => 'required',
         ));
 
@@ -28,11 +25,7 @@ class PaymentController extends Controller
                 'messages' => $validator->errors(),
             ], 422);
         } else {
-            $source_ref = $request->input('source_ref');
             $reg_num = $request->input('reg_num');
-            $amount = $request->input('amount');
-            $payment_method = $request->input('payment_method');
-
 
             $data = DB::table('users')
                 ->select('name', 'email', 'program', 'year', 'semester')
@@ -43,11 +36,8 @@ class PaymentController extends Controller
             return array(
                 'error' => false,
                 'message' => 'Everything is Ok',
-                'source_ref' => $source_ref,
                 'reg_num' => $reg_num,
-                'amount' => $amount,
-                'payment_method' => $payment_method,
-                'data' => $data
+                'result' => $data
             );
         }
     }
@@ -73,6 +63,7 @@ class PaymentController extends Controller
             $amount = $request->input('amount');
             $payment_method = $request->input('payment_method');
             $transaction_result = null;
+            $status_code = null;
 
             $payment_method_results = DB::table('users')
                 ->select('ecocash', 'zipit')
@@ -93,10 +84,13 @@ class PaymentController extends Controller
                             ->update(['ecocash' => $wallet_balance, 'semester_reg' => 1]);
 
                         $transaction_result = 'Successful Transaction';
+                        $status_code = 200;
 
                         Log::info($ecocash_transaction);
                     } else {
                         $transaction_result = 'Error: Insufficient Funds';
+                        $status_code = 603;
+
                     }
                     break;
 
@@ -113,15 +107,20 @@ class PaymentController extends Controller
                             ->update(['zipit' => $wallet_balance, 'semester_reg' => 1]);
 
                         $transaction_result = 'Successful Transaction';
+                        $status_code = 200;
+
 
                         Log::info($zipit_transaction);
                     } else {
                         $transaction_result = 'Error: Insufficient Funds';
+                        $status_code = 603;
+
                     }
                     break;
 
                 default:
                     $transaction_result = 'Error Incorrect Payment Method';
+                    $status_code = 604;
 
                     Log::error('PaymentController: Error Inside The Payment Method');
                     break;
@@ -130,14 +129,15 @@ class PaymentController extends Controller
 
             return array(
                 'error' => false,
-                'message' => 'Everything is Ok',
-                'result' => $transaction_result
+                'result' => [
+                    [
+                        'status_code'=> $status_code,
+                        'message' => 'Everything is Ok',
+                        'transaction_result' => $transaction_result
+                    ]
+                ]
             );
         }
     }
-
-
-
-
 
 }
