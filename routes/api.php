@@ -157,7 +157,12 @@ Route::post('/registration', function (Request $request) {
 /* Registration End*/
 
 //Collection of Mobile App Endpoints With Authentication
-Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => 'API\v1'], function () {
+Route::group([
+    'prefix' => 'v1',
+    'middleware' => 'auth:sanctum',
+    'namespace' => 'API\v1'],
+
+    function () {
 
     // Users
     Route::post('user', 'UserController@studentRegistration');
@@ -178,9 +183,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum', 'namespace' => '
     Route::post('receive-msg-help-desk', 'MessageController@receiveMsgs');
 
     //Payments
-    Route::post('process-payment', 'PaymentController@processPayment');
-
-
+    Route::post('customer-details', 'PaymentController@processingCustomerDetail');
+//    Route::post('process-payment', 'PaymentController@processPayment');
 
 
 });

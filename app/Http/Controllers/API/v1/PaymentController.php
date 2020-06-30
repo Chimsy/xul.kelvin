@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
-use App\Message;
 use App\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +11,48 @@ use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
+
+    public function processingCustomerDetail(Request $request)
+    {
+        $validator = Validator::make($request->input(), array(
+            'source_ref' => 'required',
+            'payment_method' => 'required',
+            'amount' => 'required',
+            'reg_num' => 'required',
+        ));
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => true,
+                'messages' => $validator->errors(),
+            ], 422);
+        } else {
+            $source_ref = $request->input('source_ref');
+            $reg_num = $request->input('reg_num');
+            $amount = $request->input('amount');
+            $payment_method = $request->input('payment_method');
+
+
+            $data = DB::table('users')
+                ->select('name', 'email', 'program', 'year', 'semester')
+                ->where(['reg_num' => $reg_num])
+                ->orderBy('id', 'asc')
+                ->get();
+
+            return array(
+                'error' => false,
+                'message' => 'Everything is Ok',
+                'source_ref' => $source_ref,
+                'reg_num' => $reg_num,
+                'amount' => $amount,
+                'payment_method' => $payment_method,
+                'data' => $data
+            );
+        }
+    }
+
+
     public function processPayment(Request $request)
     {
 
@@ -43,6 +84,8 @@ class PaymentController extends Controller
                     $ecocash = $payment_method_results[0]->ecocash;
 
                     if ($ecocash > $amount) {
+                        Payment::create($request->all());
+
                         $wallet_balance = $ecocash - $amount;
 
                         $ecocash_transaction = DB::table('users')
@@ -61,6 +104,8 @@ class PaymentController extends Controller
                     $zipit = $payment_method_results[0]->zipit;
 
                     if ($zipit > $amount) {
+                        Payment::create($request->all());
+
                         $wallet_balance = $zipit - $amount;
 
                         $zipit_transaction = DB::table('users')
@@ -82,7 +127,7 @@ class PaymentController extends Controller
                     break;
             }
 
-            Payment::create($request->all());
+
             return array(
                 'error' => false,
                 'message' => 'Everything is Ok',
@@ -91,10 +136,8 @@ class PaymentController extends Controller
         }
     }
 
-    private function makePayment()
-    {
 
-    }
+
 
 
 }
