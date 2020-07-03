@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('semester')->nullable();
             $table->string('program')->nullable();
             $table->foreign('program')->references('program_code')->on('programs')->onDelete('cascade');
+            $table->integer('program_fees')->nullable();
             $table->integer('ecocash')->nullable();
             $table->integer('zipit')->nullable();
 

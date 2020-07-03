@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@laravue.dev',
             'password' => Hash::make('laravue'),
         ]);
-        $manager = User::create([
+/*        $manager = User::create([
             'name' => 'Manager',
             'email' => 'manager@laravue.dev',
             'password' => Hash::make('laravue'),
@@ -47,18 +47,18 @@ class DatabaseSeeder extends Seeder
             'name' => 'Visitor',
             'email' => 'visitor@laravue.dev',
             'password' => Hash::make('laravue'),
-        ]);
+        ]);*/
 
         $adminRole = Role::findByName(\App\Laravue\Acl::ROLE_ADMIN);
-        $managerRole = Role::findByName(\App\Laravue\Acl::ROLE_MANAGER);
+        $admin->syncRoles($adminRole);
+        /*$managerRole = Role::findByName(\App\Laravue\Acl::ROLE_MANAGER);
         $editorRole = Role::findByName(\App\Laravue\Acl::ROLE_EDITOR);
         $userRole = Role::findByName(\App\Laravue\Acl::ROLE_STUDENT);
-        $visitorRole = Role::findByName(\App\Laravue\Acl::ROLE_GUARDIAN);
-        $admin->syncRoles($adminRole);
-        $manager->syncRoles($managerRole);
+        $visitorRole = Role::findByName(\App\Laravue\Acl::ROLE_GUARDIAN);*/
+        /*$manager->syncRoles($managerRole);
         $editor->syncRoles($editorRole);
         $user->syncRoles($userRole);
-        $visitor->syncRoles($visitorRole);
+        $visitor->syncRoles($visitorRole);*/
 
     }
 }
