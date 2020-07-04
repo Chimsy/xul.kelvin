@@ -164,30 +164,34 @@ Route::group([
 
     function () {
 
-    // Users
-    Route::post('user', 'UserController@studentRegistration');
-    Route::post('user', 'UserController@fetchUserProfile');
+        // Users
+        Route::post('user', 'UserController@studentRegistration');
+        Route::post('user', 'UserController@fetchUserProfile');
 
-    //courses
-    Route::post('courses', 'CourseController@index');
-    Route::post('current-courses', 'CourseController@myCurrentCourses');
+        //courses
+        Route::post('courses', 'CourseController@index');
+        Route::post('current-courses', 'CourseController@myCurrentCourses');
 
-    //Results
-    Route::post('results', 'ExamController@myResults');
+        //Results
+        Route::post('results', 'ExamController@myResults');
 
-    //Timetable
-    Route::post('timetable', 'ExamController@myTimetable');
+        //Timetable
+        Route::post('timetable', 'ExamController@myTimetable');
 
-    //Messages
-    Route::post('send-msg-help-desk', 'MessageController@sendMsgToHelpDesk');
-    Route::post('receive-msg-help-desk', 'MessageController@receiveMsgs');
+        //Messages
+        Route::post('send-msg-help-desk', 'MessageController@sendMsgToHelpDesk');
+        Route::post('receive-msg-help-desk', 'MessageController@receiveMsgs');
 
-    //Payments
-    Route::post('customer-details', 'PaymentController@processingCustomerDetail');
-    Route::post('process-payment', 'PaymentController@processPayment');
+        //Payments
+        Route::post('customer-details', 'PaymentController@processingCustomerDetail');
+        Route::post('process-payment', 'PaymentController@processPayment');
+
+        // Pass
+        Route::post('pass-class', 'PaymentController@processPassClass');
+        Route::post('pass-exam', 'PaymentController@processPassExam');
 
 
-});
+    });
 /* Android app End */
 
 

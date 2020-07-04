@@ -19,13 +19,11 @@ class CourseController extends Controller
             ->orderBy('program_code', 'asc')
             ->get();
 
-        $Response = array(
+        return array(
             'error' => false,
             'message' => 'Everything is Ok',
             'result' => $results
         );
-
-        return $Response;
     }
 
     public function myCurrentCourses(Request $request)
@@ -44,14 +42,12 @@ class CourseController extends Controller
             ->orderBy('program_code', 'asc')
             ->get();
 
-        $Response = array(
+        return array(
             'error' => false,
             'message' => 'Everything is Ok',
             'level'=>$level,
             'result' => $results
         );
-
-        return $Response;
     }
 
 

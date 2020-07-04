@@ -66,18 +66,23 @@ class PaymentController extends Controller
             $status_code = null;
 
             $payment_method_results = DB::table('users')
-                ->select('ecocash', 'zipit')
+                ->select('program_fees','ecocash', 'zipit')
                 ->where(['reg_num' => $reg_num])
                 ->get();
 
             switch ($payment_method) {
                 case 'ECOCASH':
                     $ecocash = $payment_method_results[0]->ecocash;
+                    $program_fees = $payment_method_results[0]->program_fees;
 
                     if ($ecocash > $amount) {
                         Payment::create($request->all());
 
+                        //Calculate Wallet Balance
                         $wallet_balance = $ecocash - $amount;
+
+                        //Reduce Program fees
+                        $program_fees_balance = $program_fees - $amount;
 
                         $ecocash_transaction = DB::table('users')
                             ->where('reg_num', $reg_num)
@@ -85,6 +90,19 @@ class PaymentController extends Controller
 
                         $transaction_result = 'Successful Transaction';
                         $status_code = 200;
+
+                        DB::table('messages')->insert([
+                            'msg_title' => 'Receipt',
+                            'msg_body' => 'Successfully Paid Amount of: RTGS$'.$amount."\n Balance Due On Fees: RTGS$".$program_fees_balance,
+                            'msg_type' => 'private',
+                            'reg_num' => $reg_num,
+                        ]);
+
+                        DB::table('users')
+                            ->where('reg_num', $reg_num)
+                            ->update([
+                                'program_fees' => $program_fees_balance,
+                            ]);
 
                         Log::info($ecocash_transaction);
                     } else {
@@ -96,11 +114,17 @@ class PaymentController extends Controller
 
                 case 'ZIPIT':
                     $zipit = $payment_method_results[0]->zipit;
+                    $program_fees = $payment_method_results[0]->program_fees;
+
 
                     if ($zipit > $amount) {
                         Payment::create($request->all());
 
+                        // Calculate Wallet Balance
                         $wallet_balance = $zipit - $amount;
+
+                        //Reduce Program fees
+                        $program_fees_balance = $program_fees - $amount;
 
                         $zipit_transaction = DB::table('users')
                             ->where('reg_num', $reg_num)
@@ -109,6 +133,18 @@ class PaymentController extends Controller
                         $transaction_result = 'Successful Transaction';
                         $status_code = 200;
 
+                        DB::table('messages')->insert([
+                            'msg_title' => 'Receipt',
+                            'msg_body' => 'Successfully Paid Amount of: RTGS$'.$amount."\n Balance Due On Fees: RTGS$".$program_fees_balance,
+                            'msg_type' => 'private',
+                            'reg_num' => $reg_num,
+                        ]);
+
+                        DB::table('users')
+                            ->where('reg_num', $reg_num)
+                            ->update([
+                                'program_fees' => $program_fees_balance,
+                            ]);
 
                         Log::info($zipit_transaction);
                     } else {
@@ -127,6 +163,8 @@ class PaymentController extends Controller
             }
 
 
+
+
             return array(
                 'error' => false,
                 'result' => [
@@ -139,5 +177,38 @@ class PaymentController extends Controller
             );
         }
     }
+
+
+    public function processPassClass(Request $request){
+        $reg_num = $request->input('reg_num');
+
+        $results = DB::table('users')
+            ->select('reg_num','name', 'email', 'program')
+            ->where(['payment_plan' => 1])
+            ->where(['reg_num' => $reg_num])
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return array(
+            'error' => false,
+            'result' => $results
+        );
+
+    }
+
+    public function processPassExam(Request $request){
+        $reg_num = $request->input('reg_num');
+
+        $results = DB::table('users')
+            ->select('reg_num','name', 'email', 'program')
+            ->where(['exam_reg' => 1])
+            ->where(['reg_num' => $reg_num])
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return array(
+            'error' => false,
+            'result' => $results
+        );    }
 
 }
