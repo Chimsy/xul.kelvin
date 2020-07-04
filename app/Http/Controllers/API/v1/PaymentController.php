@@ -66,7 +66,7 @@ class PaymentController extends Controller
             $status_code = null;
 
             $payment_method_results = DB::table('users')
-                ->select('program_fees','ecocash', 'zipit')
+                ->select('program_fees', 'ecocash', 'zipit')
                 ->where(['reg_num' => $reg_num])
                 ->get();
 
@@ -93,7 +93,7 @@ class PaymentController extends Controller
 
                         DB::table('messages')->insert([
                             'msg_title' => 'Receipt',
-                            'msg_body' => 'Successfully Paid Amount of: RTGS$'.$amount."\n Balance Due On Fees: RTGS$".$program_fees_balance,
+                            'msg_body' => 'Successfully Paid Amount of: RTGS$' . $amount . "\n Balance Due On Fees: RTGS$" . $program_fees_balance,
                             'msg_type' => 'private',
                             'reg_num' => $reg_num,
                         ]);
@@ -135,8 +135,9 @@ class PaymentController extends Controller
 
                         DB::table('messages')->insert([
                             'msg_title' => 'Receipt',
-                            'msg_body' => 'Successfully Paid Amount of: RTGS$'.$amount."\n Balance Due On Fees: RTGS$".$program_fees_balance,
+                            'msg_body' => 'Successfully Paid Amount of: RTGS$' . $amount . "\n Balance Due On Fees: RTGS$" . $program_fees_balance,
                             'msg_type' => 'private',
+                            'msg_state' => 1,
                             'reg_num' => $reg_num,
                         ]);
 
@@ -163,13 +164,11 @@ class PaymentController extends Controller
             }
 
 
-
-
             return array(
                 'error' => false,
                 'result' => [
                     [
-                        'status_code'=> $status_code,
+                        'status_code' => $status_code,
                         'message' => 'Everything is Ok',
                         'transaction_result' => $transaction_result
                     ]
@@ -179,11 +178,12 @@ class PaymentController extends Controller
     }
 
 
-    public function processPassClass(Request $request){
+    public function processPassClass(Request $request)
+    {
         $reg_num = $request->input('reg_num');
 
         $results = DB::table('users')
-            ->select('reg_num','name', 'email', 'program')
+            ->select('reg_num', 'name', 'email', 'program')
             ->where(['payment_plan' => 1])
             ->where(['reg_num' => $reg_num])
             ->orderBy('id', 'asc')
@@ -196,11 +196,12 @@ class PaymentController extends Controller
 
     }
 
-    public function processPassExam(Request $request){
+    public function processPassExam(Request $request)
+    {
         $reg_num = $request->input('reg_num');
 
         $results = DB::table('users')
-            ->select('reg_num','name', 'email', 'program')
+            ->select('reg_num', 'name', 'email', 'program')
             ->where(['exam_reg' => 1])
             ->where(['reg_num' => $reg_num])
             ->orderBy('id', 'asc')
@@ -209,6 +210,7 @@ class PaymentController extends Controller
         return array(
             'error' => false,
             'result' => $results
-        );    }
+        );
+    }
 
 }
